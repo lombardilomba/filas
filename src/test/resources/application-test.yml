@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: filas # Configuração do Spring Boot (teste): nome da aplicação
+  datasource:
+    url: jdbc:h2:mem:filas;MODE=Oracle;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # Configuração do H2: URL do banco em memória
+    driver-class-name: org.h2.Driver # Configuração do H2: driver JDBC
+    username: sa # Configuração do H2: usuário padrão
+    password: "" # Configuração do H2: senha padrão
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect # Configuração do Hibernate: dialeto do H2
+    hibernate:
+      ddl-auto: none # Configuração do Hibernate: desabilita geração automática de DDL
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql # Configuração do Liquibase: changelog SQL
+    enabled: true # Configuração do Liquibase: habilita execução nos testes

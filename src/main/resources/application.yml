@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: filas # Configuração do Spring Boot: nome da aplicação
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql # Configuração do Liquibase: changelog principal
+  jpa:
+    hibernate:
+      ddl-auto: none # Configuração do Hibernate: desabilita geração automática de DDL
