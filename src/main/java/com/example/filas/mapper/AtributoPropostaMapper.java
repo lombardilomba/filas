@@ -3,12 +3,12 @@ package com.example.filas.mapper;
 import com.example.filas.domain.AtributoProposta;
 import com.example.filas.domain.Proposta;
 import com.example.filas.dto.AtributoPropostaDTO;
-import org.springframework.stereotype.Component;
+public final class AtributoPropostaMapper {
 
-@Component
-public class AtributoPropostaMapper {
+    private AtributoPropostaMapper() {
+    }
 
-    public AtributoPropostaDTO toDto(AtributoProposta atributoProposta) {
+    public static AtributoPropostaDTO toDto(AtributoProposta atributoProposta) {
         if (atributoProposta == null) {
             return null;
         }
@@ -31,7 +31,7 @@ public class AtributoPropostaMapper {
         return dto;
     }
 
-    public AtributoProposta toEntity(AtributoPropostaDTO dto) {
+    public static AtributoProposta toEntity(AtributoPropostaDTO dto) {
         if (dto == null) {
             return null;
         }
