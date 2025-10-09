@@ -6,3 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none # Configuração do Hibernate: desabilita geração automática de DDL
+
+filas:
+  queue:
+    proposta: proposta.queue
