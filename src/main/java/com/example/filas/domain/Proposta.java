@@ -10,11 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "proposta")
 public class Proposta {
@@ -75,138 +79,6 @@ public class Proposta {
     @OneToMany(mappedBy = "proposta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Analise> analises = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getNumeroProposta() {
-        return numeroProposta;
-    }
-
-    public void setNumeroProposta(Long numeroProposta) {
-        this.numeroProposta = numeroProposta;
-    }
-
-    public String getOrigem() {
-        return origem;
-    }
-
-    public void setOrigem(String origem) {
-        this.origem = origem;
-    }
-
-    public String getFilaAtual() {
-        return filaAtual;
-    }
-
-    public void setFilaAtual(String filaAtual) {
-        this.filaAtual = filaAtual;
-    }
-
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
-
-    public String getClienteCpf() {
-        return clienteCpf;
-    }
-
-    public void setClienteCpf(String clienteCpf) {
-        this.clienteCpf = clienteCpf;
-    }
-
-    public String getGrupo2() {
-        return grupo2;
-    }
-
-    public void setGrupo2(String grupo2) {
-        this.grupo2 = grupo2;
-    }
-
-    public String getAgenteNome() {
-        return agenteNome;
-    }
-
-    public void setAgenteNome(String agenteNome) {
-        this.agenteNome = agenteNome;
-    }
-
-    public String getAgenteCodigo() {
-        return agenteCodigo;
-    }
-
-    public void setAgenteCodigo(String agenteCodigo) {
-        this.agenteCodigo = agenteCodigo;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getLojistaNome() {
-        return lojistaNome;
-    }
-
-    public void setLojistaNome(String lojistaNome) {
-        this.lojistaNome = lojistaNome;
-    }
-
-    public String getTipoCliente() {
-        return tipoCliente;
-    }
-
-    public void setTipoCliente(String tipoCliente) {
-        this.tipoCliente = tipoCliente;
-    }
-
-    public String getTipoLojista() {
-        return tipoLojista;
-    }
-
-    public void setTipoLojista(String tipoLojista) {
-        this.tipoLojista = tipoLojista;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataUltimoEnvioFila() {
-        return dataUltimoEnvioFila;
-    }
-
-    public void setDataUltimoEnvioFila(LocalDateTime dataUltimoEnvioFila) {
-        this.dataUltimoEnvioFila = dataUltimoEnvioFila;
-    }
-
-    public LocalDateTime getAtualizadoEm() {
-        return atualizadoEm;
-    }
-
-    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-        this.atualizadoEm = atualizadoEm;
-    }
-
-    public AtributoProposta getAtributoProposta() {
-        return atributoProposta;
-    }
-
     public void setAtributoProposta(AtributoProposta atributoProposta) {
         this.atributoProposta = atributoProposta;
         if (atributoProposta != null) {
@@ -214,20 +86,25 @@ public class Proposta {
         }
     }
 
-    public List<Analise> getAnalises() {
-        return analises;
-    }
-
     public void setAnalises(List<Analise> analises) {
-        this.analises = analises;
+        this.analises.clear();
+        if (analises != null) {
+            analises.forEach(this::addAnalise);
+        }
     }
 
     public void addAnalise(Analise analise) {
+        if (analise == null) {
+            return;
+        }
         analises.add(analise);
         analise.setProposta(this);
     }
 
     public void removeAnalise(Analise analise) {
+        if (analise == null) {
+            return;
+        }
         analises.remove(analise);
         analise.setProposta(null);
     }

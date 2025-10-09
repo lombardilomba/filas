@@ -7,10 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "atributo_proposta")
 public class AtributoProposta {
@@ -59,116 +63,4 @@ public class AtributoProposta {
 
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Proposta getProposta() {
-        return proposta;
-    }
-
-    public void setProposta(Proposta proposta) {
-        this.proposta = proposta;
-    }
-
-    public String getClienteNome() {
-        return clienteNome;
-    }
-
-    public void setClienteNome(String clienteNome) {
-        this.clienteNome = clienteNome;
-    }
-
-    public String getClientePerfil() {
-        return clientePerfil;
-    }
-
-    public void setClientePerfil(String clientePerfil) {
-        this.clientePerfil = clientePerfil;
-    }
-
-    public Integer getClienteClassificacao() {
-        return clienteClassificacao;
-    }
-
-    public void setClienteClassificacao(Integer clienteClassificacao) {
-        this.clienteClassificacao = clienteClassificacao;
-    }
-
-    public String getOperadorNome() {
-        return operadorNome;
-    }
-
-    public void setOperadorNome(String operadorNome) {
-        this.operadorNome = operadorNome;
-    }
-
-    public String getOperadorCodigo() {
-        return operadorCodigo;
-    }
-
-    public void setOperadorCodigo(String operadorCodigo) {
-        this.operadorCodigo = operadorCodigo;
-    }
-
-    public String getAgenteClassificacao() {
-        return agenteClassificacao;
-    }
-
-    public void setAgenteClassificacao(String agenteClassificacao) {
-        this.agenteClassificacao = agenteClassificacao;
-    }
-
-    public String getLojistaClassificacao() {
-        return lojistaClassificacao;
-    }
-
-    public void setLojistaClassificacao(String lojistaClassificacao) {
-        this.lojistaClassificacao = lojistaClassificacao;
-    }
-
-    public BigDecimal getValorCredito() {
-        return valorCredito;
-    }
-
-    public void setValorCredito(BigDecimal valorCredito) {
-        this.valorCredito = valorCredito;
-    }
-
-    public BigDecimal getEntradaPercentual() {
-        return entradaPercentual;
-    }
-
-    public void setEntradaPercentual(BigDecimal entradaPercentual) {
-        this.entradaPercentual = entradaPercentual;
-    }
-
-    public Integer getLocal() {
-        return local;
-    }
-
-    public void setLocal(Integer local) {
-        this.local = local;
-    }
-
-    public Integer getNumeroDevolucoes() {
-        return numeroDevolucoes;
-    }
-
-    public void setNumeroDevolucoes(Integer numeroDevolucoes) {
-        this.numeroDevolucoes = numeroDevolucoes;
-    }
-
-    public LocalDateTime getAtualizadoEm() {
-        return atualizadoEm;
-    }
-
-    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
-        this.atualizadoEm = atualizadoEm;
-    }
 }

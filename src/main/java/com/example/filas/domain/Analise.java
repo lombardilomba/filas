@@ -9,9 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "analise")
 public class Analise {
@@ -42,68 +46,4 @@ public class Analise {
 
     @Column(name = "prioridade")
     private String prioridade;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Proposta getProposta() {
-        return proposta;
-    }
-
-    public void setProposta(Proposta proposta) {
-        this.proposta = proposta;
-    }
-
-    public String getTipoFila() {
-        return tipoFila;
-    }
-
-    public void setTipoFila(String tipoFila) {
-        this.tipoFila = tipoFila;
-    }
-
-    public LocalDateTime getDataEntrada() {
-        return dataEntrada;
-    }
-
-    public void setDataEntrada(LocalDateTime dataEntrada) {
-        this.dataEntrada = dataEntrada;
-    }
-
-    public LocalDateTime getDataInicio() {
-        return dataInicio;
-    }
-
-    public void setDataInicio(LocalDateTime dataInicio) {
-        this.dataInicio = dataInicio;
-    }
-
-    public String getAnalistaAtribuidoId() {
-        return analistaAtribuidoId;
-    }
-
-    public void setAnalistaAtribuidoId(String analistaAtribuidoId) {
-        this.analistaAtribuidoId = analistaAtribuidoId;
-    }
-
-    public String getAnalistaAtualId() {
-        return analistaAtualId;
-    }
-
-    public void setAnalistaAtualId(String analistaAtualId) {
-        this.analistaAtualId = analistaAtualId;
-    }
-
-    public String getPrioridade() {
-        return prioridade;
-    }
-
-    public void setPrioridade(String prioridade) {
-        this.prioridade = prioridade;
-    }
 }
