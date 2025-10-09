@@ -3,12 +3,12 @@ package com.example.filas.mapper;
 import com.example.filas.domain.Analise;
 import com.example.filas.domain.Proposta;
 import com.example.filas.dto.AnaliseDTO;
-import org.springframework.stereotype.Component;
+public final class AnaliseMapper {
 
-@Component
-public class AnaliseMapper {
+    private AnaliseMapper() {
+    }
 
-    public AnaliseDTO toDto(Analise analise) {
+    public static AnaliseDTO toDto(Analise analise) {
         if (analise == null) {
             return null;
         }
@@ -25,7 +25,7 @@ public class AnaliseMapper {
         return dto;
     }
 
-    public Analise toEntity(AnaliseDTO dto) {
+    public static Analise toEntity(AnaliseDTO dto) {
         if (dto == null) {
             return null;
         }

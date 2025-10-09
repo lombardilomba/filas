@@ -6,22 +6,17 @@ import com.example.filas.domain.Proposta;
 import com.example.filas.dto.AtributoPropostaDTO;
 import com.example.filas.dto.AnaliseDTO;
 import com.example.filas.dto.PropostaDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
-public class PropostaMapper {
+public final class PropostaMapper {
 
-    private final AtributoPropostaMapper atributoPropostaMapper;
-    private final AnaliseMapper analiseMapper;
+    private PropostaMapper() {
+    }
 
-    public PropostaDTO toDto(Proposta proposta) {
+    public static PropostaDTO toDto(Proposta proposta) {
         if (proposta == null) {
             return null;
         }
@@ -44,12 +39,12 @@ public class PropostaMapper {
         dto.setDataUltimoEnvioFila(proposta.getDataUltimoEnvioFila());
         dto.setAtualizadoEm(proposta.getAtualizadoEm());
 
-        dto.setAtributoProposta(atributoPropostaMapper.toDto(proposta.getAtributoProposta()));
+        dto.setAtributoProposta(AtributoPropostaMapper.toDto(proposta.getAtributoProposta()));
         dto.setAnalises(mapAnalisesToDto(proposta.getAnalises()));
         return dto;
     }
 
-    public Proposta toEntity(PropostaDTO dto) {
+    public static Proposta toEntity(PropostaDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -74,14 +69,14 @@ public class PropostaMapper {
 
         AtributoPropostaDTO atributoPropostaDTO = dto.getAtributoProposta();
         if (atributoPropostaDTO != null) {
-            AtributoProposta atributoProposta = atributoPropostaMapper.toEntity(atributoPropostaDTO);
+            AtributoProposta atributoProposta = AtributoPropostaMapper.toEntity(atributoPropostaDTO);
             proposta.setAtributoProposta(atributoProposta);
         }
 
         List<AnaliseDTO> analisesDTO = dto.getAnalises();
         if (analisesDTO != null) {
             List<Analise> analises = analisesDTO.stream()
-                    .map(analiseMapper::toEntity)
+                    .map(AnaliseMapper::toEntity)
                     .collect(Collectors.toList());
             proposta.setAnalises(analises);
         } else {
@@ -91,12 +86,12 @@ public class PropostaMapper {
         return proposta;
     }
 
-    private List<AnaliseDTO> mapAnalisesToDto(List<Analise> analises) {
+    private static List<AnaliseDTO> mapAnalisesToDto(List<Analise> analises) {
         if (analises == null) {
             return new ArrayList<>();
         }
         return analises.stream()
-                .map(analiseMapper::toDto)
+                .map(AnaliseMapper::toDto)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }
