@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "analise")
-public class Analise {
+public class AnaliseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Analise {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proposta_id", nullable = false)
-    private Proposta proposta;
+    private PropostaEntity proposta;
 
     @Column(name = "tipo_fila")
     private String tipoFila;

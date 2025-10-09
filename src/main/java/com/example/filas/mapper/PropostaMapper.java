@@ -1,8 +1,8 @@
 package com.example.filas.mapper;
 
-import com.example.filas.domain.AtributoProposta;
-import com.example.filas.domain.Analise;
-import com.example.filas.domain.Proposta;
+import com.example.filas.domain.AtributoPropostaEntity;
+import com.example.filas.domain.AnaliseEntity;
+import com.example.filas.domain.PropostaEntity;
 import com.example.filas.dto.AtributoPropostaDTO;
 import com.example.filas.dto.AnaliseDTO;
 import com.example.filas.dto.PropostaDTO;
@@ -16,7 +16,7 @@ public final class PropostaMapper {
     private PropostaMapper() {
     }
 
-    public static PropostaDTO toDto(Proposta proposta) {
+    public static PropostaDTO toDto(PropostaEntity proposta) {
         if (proposta == null) {
             return null;
         }
@@ -44,12 +44,12 @@ public final class PropostaMapper {
         return dto;
     }
 
-    public static Proposta toEntity(PropostaDTO dto) {
+    public static PropostaEntity toEntity(PropostaDTO dto) {
         if (dto == null) {
             return null;
         }
 
-        Proposta proposta = new Proposta();
+        PropostaEntity proposta = new PropostaEntity();
         proposta.setId(dto.getId());
         proposta.setNumeroProposta(dto.getNumeroProposta());
         proposta.setOrigem(dto.getOrigem());
@@ -69,13 +69,13 @@ public final class PropostaMapper {
 
         AtributoPropostaDTO atributoPropostaDTO = dto.getAtributoProposta();
         if (atributoPropostaDTO != null) {
-            AtributoProposta atributoProposta = AtributoPropostaMapper.toEntity(atributoPropostaDTO);
+            AtributoPropostaEntity atributoProposta = AtributoPropostaMapper.toEntity(atributoPropostaDTO);
             proposta.setAtributoProposta(atributoProposta);
         }
 
         List<AnaliseDTO> analisesDTO = dto.getAnalises();
         if (analisesDTO != null) {
-            List<Analise> analises = analisesDTO.stream()
+            List<AnaliseEntity> analises = analisesDTO.stream()
                     .map(AnaliseMapper::toEntity)
                     .collect(Collectors.toList());
             proposta.setAnalises(analises);
@@ -86,7 +86,7 @@ public final class PropostaMapper {
         return proposta;
     }
 
-    private static List<AnaliseDTO> mapAnalisesToDto(List<Analise> analises) {
+    private static List<AnaliseDTO> mapAnalisesToDto(List<AnaliseEntity> analises) {
         if (analises == null) {
             return new ArrayList<>();
         }

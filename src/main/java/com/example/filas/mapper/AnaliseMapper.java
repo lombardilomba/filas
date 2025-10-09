@@ -1,14 +1,14 @@
 package com.example.filas.mapper;
 
-import com.example.filas.domain.Analise;
-import com.example.filas.domain.Proposta;
+import com.example.filas.domain.AnaliseEntity;
+import com.example.filas.domain.PropostaEntity;
 import com.example.filas.dto.AnaliseDTO;
 public final class AnaliseMapper {
 
     private AnaliseMapper() {
     }
 
-    public static AnaliseDTO toDto(Analise analise) {
+    public static AnaliseDTO toDto(AnaliseEntity analise) {
         if (analise == null) {
             return null;
         }
@@ -25,15 +25,15 @@ public final class AnaliseMapper {
         return dto;
     }
 
-    public static Analise toEntity(AnaliseDTO dto) {
+    public static AnaliseEntity toEntity(AnaliseDTO dto) {
         if (dto == null) {
             return null;
         }
 
-        Analise analise = new Analise();
+        AnaliseEntity analise = new AnaliseEntity();
         analise.setId(dto.getId());
         if (dto.getPropostaId() != null) {
-            Proposta proposta = new Proposta();
+            PropostaEntity proposta = new PropostaEntity();
             proposta.setId(dto.getPropostaId());
             analise.setProposta(proposta);
         }

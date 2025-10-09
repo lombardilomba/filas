@@ -2,9 +2,9 @@ package com.example.filas.messaging;
 
 import com.example.filas.config.MockRabbitTestConfig;
 import com.example.filas.config.MockRabbitTestConfig.RabbitMessagePublisher;
-import com.example.filas.domain.Analise;
-import com.example.filas.domain.AtributoProposta;
-import com.example.filas.domain.Proposta;
+import com.example.filas.domain.AnaliseEntity;
+import com.example.filas.domain.AtributoPropostaEntity;
+import com.example.filas.domain.PropostaEntity;
 import com.example.filas.dto.AnaliseDTO;
 import com.example.filas.dto.AtributoPropostaDTO;
 import com.example.filas.dto.PropostaDTO;
@@ -57,20 +57,20 @@ class PropostaMessageListenerIntegrationTest {
         rabbitMessagePublisher.send(PROPOSTA_QUEUE, mensagem);
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
-            List<Proposta> propostas = propostaRepository.findAll();
+            List<PropostaEntity> propostas = propostaRepository.findAll();
             assertThat(propostas).hasSize(1);
 
-            Proposta proposta = propostas.get(0);
+            PropostaEntity proposta = propostas.get(0);
             assertThat(proposta.getNumeroProposta()).isEqualTo(12345L);
             assertThat(proposta.getOrigem()).isEqualTo("APP");
             assertThat(proposta.getClienteCpf()).isEqualTo("12345678901");
 
-            AtributoProposta atributoProposta = atributoPropostaRepository.findById(proposta.getId()).orElse(null);
+            AtributoPropostaEntity atributoProposta = atributoPropostaRepository.findById(proposta.getId()).orElse(null);
             assertThat(atributoProposta).isNotNull();
             assertThat(atributoProposta.getClienteNome()).isEqualTo("Fulano de Tal");
             assertThat(atributoProposta.getValorCredito()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 
-            List<Analise> analises = analiseRepository.findAll();
+            List<AnaliseEntity> analises = analiseRepository.findAll();
             assertThat(analises).hasSize(1);
             assertThat(analises.get(0).getTipoFila()).isEqualTo("FILA_PRINCIPAL");
         });

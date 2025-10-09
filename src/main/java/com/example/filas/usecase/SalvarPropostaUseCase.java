@@ -1,6 +1,6 @@
 package com.example.filas.usecase;
 
-import com.example.filas.domain.Proposta;
+import com.example.filas.domain.PropostaEntity;
 import com.example.filas.dto.PropostaDTO;
 import com.example.filas.mapper.PropostaMapper;
 import com.example.filas.repository.facade.PropostaRepositoryFacade;
@@ -17,8 +17,8 @@ public class SalvarPropostaUseCase {
         if (propostaDTO == null) {
             throw new IllegalArgumentException("PropostaDTO não pode ser nulo");
         }
-        Proposta proposta = PropostaMapper.toEntity(propostaDTO);
-        Proposta propostaSalva = propostaRepositoryFacade.save(proposta);
+        PropostaEntity proposta = PropostaMapper.toEntity(propostaDTO);
+        PropostaEntity propostaSalva = propostaRepositoryFacade.save(proposta);
         return PropostaMapper.toDto(propostaSalva);
     }
 }
