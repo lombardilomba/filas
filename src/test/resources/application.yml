@@ -11,7 +11,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.sql
+    change-log: classpath:db/changelog-test/db.changelog-master.sql
     contexts: test
   rabbitmq:
     listener:

@@ -16,8 +16,8 @@ public class PropostaMessageListener {
 
     static final String LISTENER_ID = "propostaMessageListener";
 
-    private final ObjectMapper objectMapper;
     private final SalvarPropostaUseCase salvarPropostaUseCase;
+    private final ObjectMapper objectMapper;
 
     @RabbitListener(id = PropostaMessageListener.LISTENER_ID, queues = "${filas.queue.proposta}")
     public void onMessage(String message) {
