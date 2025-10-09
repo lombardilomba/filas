@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "atributo_proposta")
-public class AtributoProposta {
+public class AtributoPropostaEntity {
 
     @Id
     @Column(name = "proposta_id")
@@ -26,7 +26,7 @@ public class AtributoProposta {
     @OneToOne
     @MapsId
     @JoinColumn(name = "proposta_id")
-    private Proposta proposta;
+    private PropostaEntity proposta;
 
     @Column(name = "cliente_nome")
     private String clienteNome;

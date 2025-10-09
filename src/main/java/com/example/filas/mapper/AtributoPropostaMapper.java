@@ -1,14 +1,14 @@
 package com.example.filas.mapper;
 
-import com.example.filas.domain.AtributoProposta;
-import com.example.filas.domain.Proposta;
+import com.example.filas.domain.AtributoPropostaEntity;
+import com.example.filas.domain.PropostaEntity;
 import com.example.filas.dto.AtributoPropostaDTO;
 public final class AtributoPropostaMapper {
 
     private AtributoPropostaMapper() {
     }
 
-    public static AtributoPropostaDTO toDto(AtributoProposta atributoProposta) {
+    public static AtributoPropostaDTO toDto(AtributoPropostaEntity atributoProposta) {
         if (atributoProposta == null) {
             return null;
         }
@@ -31,15 +31,15 @@ public final class AtributoPropostaMapper {
         return dto;
     }
 
-    public static AtributoProposta toEntity(AtributoPropostaDTO dto) {
+    public static AtributoPropostaEntity toEntity(AtributoPropostaDTO dto) {
         if (dto == null) {
             return null;
         }
 
-        AtributoProposta atributoProposta = new AtributoProposta();
+        AtributoPropostaEntity atributoProposta = new AtributoPropostaEntity();
         atributoProposta.setId(dto.getId());
         if (dto.getPropostaId() != null) {
-            Proposta proposta = new Proposta();
+            PropostaEntity proposta = new PropostaEntity();
             proposta.setId(dto.getPropostaId());
             atributoProposta.setProposta(proposta);
         }

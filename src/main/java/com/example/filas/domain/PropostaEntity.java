@@ -21,7 +21,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "proposta")
-public class Proposta {
+public class PropostaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,26 +74,26 @@ public class Proposta {
     private LocalDateTime atualizadoEm;
 
     @OneToOne(mappedBy = "proposta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AtributoProposta atributoProposta;
+    private AtributoPropostaEntity atributoProposta;
 
     @OneToMany(mappedBy = "proposta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Analise> analises = new ArrayList<>();
+    private List<AnaliseEntity> analises = new ArrayList<>();
 
-    public void setAtributoProposta(AtributoProposta atributoProposta) {
+    public void setAtributoProposta(AtributoPropostaEntity atributoProposta) {
         this.atributoProposta = atributoProposta;
         if (atributoProposta != null) {
             atributoProposta.setProposta(this);
         }
     }
 
-    public void setAnalises(List<Analise> analises) {
+    public void setAnalises(List<AnaliseEntity> analises) {
         this.analises.clear();
         if (analises != null) {
             analises.forEach(this::addAnalise);
         }
     }
 
-    public void addAnalise(Analise analise) {
+    public void addAnalise(AnaliseEntity analise) {
         if (analise == null) {
             return;
         }
@@ -101,7 +101,7 @@ public class Proposta {
         analise.setProposta(this);
     }
 
-    public void removeAnalise(Analise analise) {
+    public void removeAnalise(AnaliseEntity analise) {
         if (analise == null) {
             return;
         }
