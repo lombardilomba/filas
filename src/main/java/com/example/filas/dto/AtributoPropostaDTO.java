@@ -52,4 +52,8 @@ public class AtributoPropostaDTO {
 
     @JsonProperty("updatedAt")
     private LocalDateTime atualizadoEm;
+
+    public static AtributoPropostaDTOBuilder.IdStep builder() {
+        return AtributoPropostaDTOBuilder.builder();
+    }
 }
