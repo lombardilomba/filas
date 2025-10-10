@@ -1,5 +1,6 @@
 package com.example.filas.proposta;
 
+import com.example.filas.config.MockRabbitTestConfig;
 import com.example.filas.domain.AtributoPropostaEntity;
 import com.example.filas.domain.PropostaEntity;
 import com.example.filas.repository.AtributoPropostaRepository;
@@ -10,8 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -21,11 +22,15 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.springframework.test.context.TestPropertySource;
 import redis.embedded.RedisServer;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@Import(MockRabbitTestConfig.class)
+@TestPropertySource(properties = "filas.queue.proposta=" + PropostaRedisRepositoryIntegrationTest.PROPOSTA_QUEUE)
 class PropostaRedisRepositoryIntegrationTest {
+
+    static final String PROPOSTA_QUEUE = "proposta.queue.test";
 
     private static RedisServer redisServer;
     private static int redisPort;
@@ -38,7 +43,7 @@ class PropostaRedisRepositoryIntegrationTest {
     }
 
     @Autowired
-    private PropostaRedisRepository repository;
+    private PropostaRedisRepository redisRepository;
 
     @Autowired
     private PropostaRepository propostaRepository;
@@ -94,8 +99,8 @@ class PropostaRedisRepositoryIntegrationTest {
                 atributoCarregado.getValorCredito()
         );
 
-        repository.save(proposta);
-        Optional<Proposta> encontrada = repository.findById(proposta.id());
+        redisRepository.save(proposta);
+        Optional<Proposta> encontrada = redisRepository.findById(proposta.id());
 
         assertThat(encontrada).contains(proposta);
     }
@@ -105,7 +110,7 @@ class PropostaRedisRepositoryIntegrationTest {
             redisPort = findFreePort();
             redisServer = RedisServer.builder()
                     .port(redisPort)
-                    .setting("maxmemory 64M")
+                    .setting("maxmemory 8M")
                     .setting("bind 127.0.0.1")
                     .build();
             redisServer.start();
