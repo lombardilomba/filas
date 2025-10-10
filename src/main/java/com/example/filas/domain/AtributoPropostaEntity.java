@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class AtributoPropostaEntity {
 
     @Id
-    @Column(name = "proposta_id")
+    @Column(name = "atributo_id")
     private Long id;
 
     @OneToOne
