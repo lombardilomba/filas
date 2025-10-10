@@ -23,7 +23,8 @@ CREATE TABLE proposta (
 
 --changeset filas:2
 CREATE TABLE atributo_proposta (
-    proposta_id NUMBER PRIMARY KEY,
+    atributo_id number PRIMARY KEY,
+    proposta_id NUMBER ,
     cliente_nome VARCHAR2(150),
     cliente_perfil VARCHAR2(100),
     cliente_classificacao NUMBER,

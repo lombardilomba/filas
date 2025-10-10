@@ -1,15 +1,37 @@
 spring:
   application:
-    name: filas # Configuração do Spring Boot (teste): nome da aplicação
+    name: filas-test
+
   datasource:
-    url: jdbc:h2:mem:filas;MODE=Oracle;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # Configuração do H2: URL do banco em memória
-    driver-class-name: org.h2.Driver # Configuração do H2: driver JDBC
-    username: sa # Configuração do H2: usuário padrão
-    password: "" # Configuração do H2: senha padrão
+    # banco isolado por contexto de teste (evita colisão da DATABASECHANGELOG)
+    url: jdbc:h2:mem:filas_${random.uuid};MODE=Oracle;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect # Configuração do Hibernate: dialeto do H2
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: none # Configuração do Hibernate: desabilita geração automática de DDL
+      ddl-auto: none
+
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.sql # Configuração do Liquibase: changelog SQL
-    enabled: true # Configuração do Liquibase: habilita execução nos testes
+    enabled: true
+    contexts: test
+    change-log: classpath:db/changelog-test/db.changelog-master.sql
+
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+        default-requeue-rejected: false
+    admin:
+      auto-startup: false
+
+filas:
+  queue:
+    proposta: proposta.queue.test
+
+logging:
+  level:
+    liquibase: info
+    org.springframework.test.context: info
