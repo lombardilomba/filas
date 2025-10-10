@@ -1,7 +1,5 @@
 package com.example.filas.messaging;
 
-import com.example.filas.config.MockRabbitTestConfig;
-import com.example.filas.config.MockRabbitTestConfig.RabbitMessagePublisher;
 import com.example.filas.domain.AnaliseEntity;
 import com.example.filas.domain.AtributoPropostaEntity;
 import com.example.filas.domain.PropostaEntity;
@@ -16,28 +14,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Import(MockRabbitTestConfig.class)
-@TestPropertySource(properties = "filas.queue.proposta=" + PropostaMessageListenerIntegrationTest.PROPOSTA_QUEUE)
 class PropostaMessageListenerIntegrationTest {
 
-    static final String PROPOSTA_QUEUE = "proposta.queue.test";
-
     @Autowired
-    private RabbitMessagePublisher rabbitMessagePublisher;
+    private PropostaMessageListener propostaMessageListener;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -56,26 +46,24 @@ class PropostaMessageListenerIntegrationTest {
         PropostaDTO propostaDTO = criarPropostaDTO();
         String mensagem = objectMapper.writeValueAsString(propostaDTO);
 
-        rabbitMessagePublisher.send(PROPOSTA_QUEUE, mensagem);
+        propostaMessageListener.onMessage(mensagem);
 
-        await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
-            List<PropostaEntity> propostas = propostaRepository.findAll();
-            assertThat(propostas).hasSize(1);
+        List<PropostaEntity> propostas = propostaRepository.findAll();
+        assertThat(propostas).hasSize(1);
 
-            PropostaEntity proposta = propostas.get(0);
-            assertThat(proposta.getNumeroProposta()).isEqualTo(12345L);
-            assertThat(proposta.getOrigem()).isEqualTo("APP");
-            assertThat(proposta.getClienteCpf()).isEqualTo("12345678901");
+        PropostaEntity proposta = propostas.get(0);
+        assertThat(proposta.getNumeroProposta()).isEqualTo(12345L);
+        assertThat(proposta.getOrigem()).isEqualTo("APP");
+        assertThat(proposta.getClienteCpf()).isEqualTo("12345678901");
 
-            AtributoPropostaEntity atributoProposta = atributoPropostaRepository.findById(proposta.getId()).orElse(null);
-            assertThat(atributoProposta).isNotNull();
-            assertThat(atributoProposta.getClienteNome()).isEqualTo("Fulano de Tal");
-            assertThat(atributoProposta.getValorCredito()).isEqualByComparingTo(BigDecimal.valueOf(15000));
+        AtributoPropostaEntity atributoProposta = atributoPropostaRepository.findById(proposta.getId()).orElse(null);
+        assertThat(atributoProposta).isNotNull();
+        assertThat(atributoProposta.getClienteNome()).isEqualTo("Fulano de Tal");
+        assertThat(atributoProposta.getValorCredito()).isEqualByComparingTo(BigDecimal.valueOf(15000));
 
-            List<AnaliseEntity> analises = analiseRepository.findAll();
-            assertThat(analises).hasSize(1);
-            assertThat(analises.get(0).getTipoFila()).isEqualTo("FILA_PRINCIPAL");
-        });
+        List<AnaliseEntity> analises = analiseRepository.findAll();
+        assertThat(analises).hasSize(1);
+        assertThat(analises.get(0).getTipoFila()).isEqualTo("FILA_PRINCIPAL");
     }
 
     private PropostaDTO criarPropostaDTO() {
