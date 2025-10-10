@@ -1,67 +1,123 @@
 package com.example.filas.proposta;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.filas.domain.AtributoPropostaEntity;
+import com.example.filas.domain.PropostaEntity;
+import com.example.filas.repository.AtributoPropostaRepository;
+import com.example.filas.repository.PropostaRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.math.BigDecimal;
+import java.net.ServerSocket;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import redis.embedded.RedisServer;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class PropostaRedisRepositoryIntegrationTest {
+
+    private static RedisServer redisServer;
+    private static int redisPort;
+
+    @DynamicPropertySource
+    static void configureRedis(DynamicPropertyRegistry registry) {
+        ensureRedisServerStarted();
+        registry.add("spring.data.redis.host", () -> "localhost");
+        registry.add("spring.data.redis.port", () -> redisPort);
+    }
 
     @Autowired
     private PropostaRedisRepository repository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private PropostaRepository propostaRepository;
 
-    @MockBean
+    @Autowired
+    private AtributoPropostaRepository atributoPropostaRepository;
+
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    private ValueOperations<String, String> valueOperations;
+    @AfterEach
+    void cleanUp() {
+        propostaRepository.deleteAll();
+        stringRedisTemplate.getConnectionFactory()
+                .getConnection()
+                .serverCommands()
+                .flushAll();
+    }
 
-    @BeforeEach
-    void setUp() {
-        valueOperations = Mockito.mock(ValueOperations.class);
-        when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
+    @AfterAll
+    static void shutdownRedis() {
+        if (redisServer != null && redisServer.isActive()) {
+            redisServer.stop();
+        }
     }
 
     @Test
-    @DisplayName("Deve salvar a proposta convertida em JSON no Redis")
-    void deveSalvarPropostaNoRedis() throws Exception {
-        Proposta proposta = new Proposta("123", "12345678900", new BigDecimal("1500.00"));
+    @DisplayName("Deve persistir a proposta no banco e replicar dados básicos no Redis")
+    void devePersistirNoBancoELerDoRedis() {
+        PropostaEntity propostaEntity = new PropostaEntity();
+        propostaEntity.setNumeroProposta(1001L);
+        propostaEntity.setOrigem("app");
+        propostaEntity.setFilaAtual("fila_principal");
+        propostaEntity.setPerfil("cliente");
+        propostaEntity.setClienteCpf("12345678900");
+
+        AtributoPropostaEntity atributo = new AtributoPropostaEntity();
+        atributo.setValorCredito(new BigDecimal("1500.00"));
+        propostaEntity.setAtributoProposta(atributo);
+
+        PropostaEntity salva = propostaRepository.save(propostaEntity);
+
+        PropostaEntity carregada = propostaRepository.findById(salva.getId()).orElseThrow();
+        AtributoPropostaEntity atributoCarregado = atributoPropostaRepository.findById(carregada.getId()).orElseThrow();
+
+        assertThat(carregada.getNumeroProposta()).isEqualTo(1001L);
+        assertThat(carregada.getClienteCpf()).isEqualTo("12345678900");
+        assertThat(atributoCarregado.getValorCredito()).isEqualByComparingTo("1500.00");
+
+        Proposta proposta = new Proposta(
+                String.valueOf(carregada.getNumeroProposta()),
+                carregada.getClienteCpf(),
+                atributoCarregado.getValorCredito()
+        );
 
         repository.save(proposta);
-
-        ArgumentCaptor<String> valueCaptor = ArgumentCaptor.forClass(String.class);
-        verify(valueOperations).set("proposta:" + proposta.id(), valueCaptor.capture());
-
-        Proposta propostaSalva = objectMapper.readValue(valueCaptor.getValue(), Proposta.class);
-        assertThat(propostaSalva).isEqualTo(proposta);
-    }
-
-    @Test
-    @DisplayName("Deve recuperar a proposta armazenada no Redis")
-    void deveRecuperarPropostaNoRedis() throws Exception {
-        Proposta proposta = new Proposta("456", "98765432100", new BigDecimal("2500.00"));
-        String json = objectMapper.writeValueAsString(proposta);
-        when(valueOperations.get("proposta:" + proposta.id())).thenReturn(json);
-
         Optional<Proposta> encontrada = repository.findById(proposta.id());
 
         assertThat(encontrada).contains(proposta);
+    }
+
+    private static void ensureRedisServerStarted() {
+        if (redisServer == null) {
+            redisPort = findFreePort();
+            redisServer = RedisServer.builder()
+                    .port(redisPort)
+                    .setting("maxmemory 64M")
+                    .setting("bind 127.0.0.1")
+                    .build();
+            redisServer.start();
+        }
+    }
+
+    private static int findFreePort() {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            socket.setReuseAddress(true);
+            return socket.getLocalPort();
+        } catch (Exception e) {
+            throw new IllegalStateException("Não foi possível encontrar uma porta livre para o Redis", e);
+        }
     }
 }
