@@ -24,12 +24,13 @@ class ListarPropostasUseCaseIntegrationTest {
 
     @Test
     void deveListarTodasPropostas() {
+        int totalAntes = listarPropostasUseCase.execute(null).size();
         salvarPropostaUseCase.execute(novaProposta(3001L, "APROVACAO"));
         salvarPropostaUseCase.execute(novaProposta(3002L, "REANALISE"));
 
         List<PropostaDTO> propostas = listarPropostasUseCase.execute(null);
 
-        Assertions.assertEquals(2, propostas.size());
+        Assertions.assertEquals(totalAntes + 2, propostas.size());
         Assertions.assertTrue(propostas.stream().anyMatch(dto -> dto.getNumeroProposta().equals(3001L)));
         Assertions.assertTrue(propostas.stream().anyMatch(dto -> dto.getNumeroProposta().equals(3002L)));
     }
