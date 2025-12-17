@@ -7,11 +7,16 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Converte SpecificationFilterDTO para uma Specification do objeto
+ * Aplicando os filters com suas operacoes
+ */
+
 public class PropostaSpecification {
 
     public static Specification<PropostaEntity> build(SpecificationFilterDTO filters) {
 
-        return (Root<PropostaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+        return (Root<PropostaEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -23,12 +28,12 @@ public class PropostaSpecification {
 
                 Path<?> path = root.get(attribute.getField());
 
-                //caso seja um tipo especifico, tipo buscar com like muda aqui com ifzinho se for o caso (nao precisa ser if)
+                Predicate predicate = attribute.getStrategy().build(criteriaBuilder, path, values);
 
-                predicates.add(path.in(values));
+                predicates.add(predicate);
             });
 
-            return cb.and(predicates.toArray(new Predicate[0]));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Request base
+ */
 @Data
 public class FilterRequestDTO {
 

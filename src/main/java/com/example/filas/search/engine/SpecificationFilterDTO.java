@@ -6,14 +6,13 @@ import java.util.Map;
 
 public class SpecificationFilterDTO {
 
-    private final Map<FilterAttribute, List<String>> filters = new HashMap<>();
+    private final Map<FilterAttribute, List<?>> filters = new HashMap<>();
 
-    public void add(FilterAttribute attribute, List<String> values) {
+    public void add(FilterAttribute attribute, List<?> values) {
         filters.put(attribute, values);
     }
 
-    public Map<FilterAttribute, List<String>> getFilters() {
+    public Map<FilterAttribute, List<?>> getFilters() {
         return filters;
     }
-
 }

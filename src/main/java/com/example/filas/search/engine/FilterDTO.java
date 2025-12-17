@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Conteudo da request base
+ */
 @Data
 public class FilterDTO {
     private String attribute;
