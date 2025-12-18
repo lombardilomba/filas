@@ -60,3 +60,73 @@ CREATE TABLE analise (
 --changeset filas:4
 CREATE INDEX idx_analise_proposta ON analise (proposta_id);
 --rollback DROP INDEX idx_analise_proposta;
+
+
+INSERT INTO proposta (
+    proposta,
+    origem,
+    fila_atual,
+    perfil,
+    cliente_cpf,
+    grupo2,
+    agente_nome,
+    agente_codigo,
+    cidade,
+    lojista_nome,
+    tipo_cliente,
+    tipo_lojista,
+    data_criacao,
+    data_ultimo_envio_fila,
+    atualizado_em
+) VALUES
+(
+    1001,
+    'omni+',
+    'ANALISE',
+    'PADRAO',
+    '12345678900',
+    'G1',
+    'João Silva',
+    '330',
+    'São Paulo',
+    'Loja Centro',
+    'PF',
+    'FISICO',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+),
+(
+    1002,
+    'omnifacil',
+    'APROVACAO',
+    'VIP',
+    '98765432100',
+    'G2',
+    'Maria Souza',
+    '330',
+    'Campinas',
+    'Loja Norte',
+    'PF',
+    'FISICO',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+),
+(
+    1003,
+    'outro',
+    'REPROVADO',
+    'PADRAO',
+    '11122233344',
+    'G1',
+    'Carlos Lima',
+    '999',
+    'Rio de Janeiro',
+    'Loja Sul',
+    'PJ',
+    'ONLINE',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+);
